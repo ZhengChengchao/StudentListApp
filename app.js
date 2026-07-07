@@ -85,12 +85,13 @@ app.get('/addStudent', (req, res) => {
 app.post('/addStudent', upload.single('image'), (req, res) => {
   // Extract student data from the request body
   const { name, dob, contact } = req.body;
-  let image;
-  if (req.file) { 
-    image = req.file.filename; // Save only the filename
-  } else {
-    image = null; 
-  }
+  // let image;
+  // if (req.file) { 
+  //   image = req.file.filename; // Save only the filename
+  // } else {
+  //   image = null; 
+  // }
+  const image = req.file ? req.file.filename : null; // Use a ternary operator to set the image variable
 
   const sql = 'INSERT INTO student (name, dob, contact, image) VALUES (?, ?, ?, ?)';
   // Insert the new student into the database
@@ -132,10 +133,11 @@ app.post('/editStudent/:id', upload.single('image'), (req, res) => {
   const studentId = req.params.id;
   // Extract student data from the request body
   const { name, dob, contact } = req.body;
-  let image = req.body.currentImage; // retrieve the current image filename
-  if (req.file) { // if new image is uploaded
-    image = req.file.filename; // set image to be new image filename
-  } 
+  // let image = req.body.currentImage; // retrieve the current image filename
+  // if (req.file) { // if new image is uploaded
+  //   image = req.file.filename; // set image to be new image filename
+  // } 
+  const image = req.file ? req.file.filename : req.body.currentImage; // Use a ternary operator to set the image variable
   const sql = 'UPDATE student SET name = ? , dob = ?, contact = ?, image = ? WHERE studentId = ?';
   // Update the student in the database
   connection.query( sql , [name, dob, contact, image, studentId], (error, results) => {
